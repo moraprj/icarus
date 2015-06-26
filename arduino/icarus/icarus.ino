@@ -23,8 +23,7 @@ const int chipSelect = 4;
 void setup()
 {
   Serial.begin(115200);
-  Serial.println(F("Adafruit 10 DOF Board AHRS Example")); Serial.println("");
-  
+
   // Initialize the sensors.
   accel.begin();
   mag.begin();
@@ -42,22 +41,19 @@ void setup()
 void loop(void)
 {
   String data_sensor = "";
+  char dato[20];
   sensors_vec_t   orientation;
 
   // Use the simple AHRS function to get the current orientation.
   if (ahrs.getOrientation(&orientation))
   {
     /* 'orientation' should have valid .roll and .pitch fields */
-    Serial.print(F("Orientation: "));
-    Serial.print(orientation.roll);
-    data_sensor += String("R ") + String(orientation.roll) + String(" ");
-    Serial.print(F(" "));
-    Serial.print(orientation.pitch);
-    data_sensor += String("P ") + String(orientation.pitch) + String(" ");
-    Serial.print(F(" "));
-    Serial.print(orientation.heading);
-    data_sensor += String("H ") + String(orientation.heading) + String(" ");
-    Serial.println(F(""));
+    data_sensor += String("R ") + String(orientation.roll) + String("\t\t");
+    
+    data_sensor += String("P ") + String(orientation.pitch) + String("\t\t");
+    
+    data_sensor += String("H ") + String(orientation.heading) + String("\t\t");
+    
   }
 
   // Calculate the altitude using the barometric pressure sensor
@@ -69,31 +65,22 @@ void loop(void)
     float temperature;
     bmp.getTemperature(&temperature);
     /* Convert atmospheric pressure, SLP and temp to altitude */
-    Serial.print(F("Alt: "));
-    Serial.print(bmp.pressureToAltitude(seaLevelPressure,
-                                        bmp_event.pressure,
-                                        temperature)); 
-    data_sensor += String("A ") + String(bmp.pressureToAltitude(seaLevelPressure,
-                                        bmp_event.pressure,
-                                        temperature)) + String(" ");
-    Serial.println(F(""));
+    data_sensor += String("A ") + String(bmp.pressureToAltitude(seaLevelPressure, bmp_event.pressure, temperature)) + String("\t");
+    
     /* Display the temperature */
-    Serial.print(F("Temp: "));
-    Serial.print(temperature);
     data_sensor += String("T ") + String(temperature);
-    Serial.println(F(""));
-
   }
 
-  
+  Serial.println(data_sensor);
+
   // if the file is available, write to it:
   File dataFile = SD.open("datalog.txt", FILE_WRITE);
   if (dataFile) {
     dataFile.println(data_sensor);
     dataFile.close();
-  }else {
+  } else {
     Serial.println("error SD Card");
   }
-  
+
   delay(100);
 }

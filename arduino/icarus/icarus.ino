@@ -40,7 +40,7 @@ void setup()
 
 void loop(void)
 {
-  String data_sensor = "";
+  String data_sensor = "D,";
   char dato[20];
   sensors_vec_t   orientation;
 
@@ -48,11 +48,11 @@ void loop(void)
   if (ahrs.getOrientation(&orientation))
   {
     /* 'orientation' should have valid .roll and .pitch fields */
-    data_sensor += String("R ") + String(orientation.roll) + String("\t\t");
+    data_sensor += String(orientation.roll) + String(",");
     
-    data_sensor += String("P ") + String(orientation.pitch) + String("\t\t");
+    data_sensor += String(orientation.pitch) + String(",");
     
-    data_sensor += String("H ") + String(orientation.heading) + String("\t\t");
+    data_sensor += String(orientation.heading) + String(",");
     
   }
 
@@ -65,10 +65,10 @@ void loop(void)
     float temperature;
     bmp.getTemperature(&temperature);
     /* Convert atmospheric pressure, SLP and temp to altitude */
-    data_sensor += String("A ") + String(bmp.pressureToAltitude(seaLevelPressure, bmp_event.pressure, temperature)) + String("\t");
+    data_sensor += String(bmp.pressureToAltitude(seaLevelPressure, bmp_event.pressure, temperature)) + String(",");
     
     /* Display the temperature */
-    data_sensor += String("T ") + String(temperature);
+    data_sensor += String(temperature);
   }
 
   Serial.println(data_sensor);

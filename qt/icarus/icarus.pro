@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT       += core \
+            serialport
 
 QT       -= gui
 
@@ -15,4 +16,18 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += \
+    communication/LinkLayerIcarus.cpp \
+    communication/SerialIcarus.cpp \
+    communication/ConfigFile.cpp \
+    communication/messages/MsgBase.cpp \
+    communication/messages/MsgData.cpp \
+    Icarus.cpp
+
+HEADERS += \
+    communication/LinkLayerIcarus.h \
+    communication/SerialIcarus.h \
+    communication/ConfigFile.h \
+    communication/messages/MsgBase.h \
+    communication/messages/MsgData.h \
+    Icarus.h

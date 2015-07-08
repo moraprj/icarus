@@ -1,0 +1,8 @@
+Iniciar conexión:
+
+sudo wvdial Defaults
+
+Cerrar conexión:
+
+sudo killall wvdial
+

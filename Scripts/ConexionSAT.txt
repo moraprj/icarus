@@ -1,8 +1,22 @@
-Iniciar conexi�n:
+Bajar aplicación wvdial:
+
+sudo apt-get install wvdial
+
+Conectar el teléfono a la raspberry con el cable usb y configurarlo:
+
+sudo wvdialconf
+
+Editar el archivo /etc/wvdial.conf con los siguientes datos:
+
+Phone = #777
+Username = ''
+Password = ''
+
+Iniciar conexión:
 
 sudo wvdial Defaults
 
-Cerrar conexi�n:
+Cerrar conexión:
 
 sudo killall wvdial
 

@@ -24,6 +24,7 @@ int geiger_input = 2;
 long count = 0;
 long countPerMinute = 0;
 long timePreviousMeassure = 0;
+float pressure;
 
 void setup()
 {
@@ -63,9 +64,13 @@ void loop(void)
   bmp.getEvent(&bmp_event);
   if (bmp_event.pressure)
   {
-    /* Get ambient temperature in C */
     float temperature;
     bmp.getTemperature(&temperature);
+    
+    /* Get Pressure in kPa */
+    bmp.getPressure(&pressure);
+    data_sensor += String(pressure) + String(",");
+    
     /* Convert atmospheric pressure, SLP and temp to altitude */
     data_sensor += String(bmp.pressureToAltitude(seaLevelPressure, bmp_event.pressure, temperature)) + String(",");
     
@@ -82,7 +87,7 @@ void loop(void)
     timePreviousMeassure = millis();
     char buffer[20];
     //Serial.print("#S|LOGTEST|[");
-    String count_data = String("G, ") + String(countPerMinute);
+    String count_data = String("G, ") + String(pressure) + String(",") + String(countPerMinute);
     Serial.println(count_data);
     //Serial.println(itoa((countPerMinute), buffer, 10));
     //Serial.println("]#");

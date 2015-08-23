@@ -4,7 +4,6 @@
 #include <Adafruit_BMP085_U.h>
 #include <Adafruit_Simple_AHRS.h>
 #include <SPI.h>
-#include <SD.h>
 
 // Create sensor instances.
 Adafruit_LSM303_Accel_Unified accel(30301);
@@ -20,6 +19,12 @@ float seaLevelPressure = SENSORS_PRESSURE_SEALEVELHPA;
 // Chip Select SD Card
 const int chipSelect = 4;
 
+// Variables Geiger
+int geiger_input = 2;
+long count = 0;
+long countPerMinute = 0;
+long timePreviousMeassure = 0;
+
 void setup()
 {
   Serial.begin(115200);
@@ -29,13 +34,10 @@ void setup()
   mag.begin();
   bmp.begin();
 
-  // see if the card is present and can be initialized:
-  if (!SD.begin(chipSelect)) {
-    Serial.println("Card failed, or not present");
-    // don't do anything more:
-    return;
-  }
-  Serial.println("card initialized.");
+  // Initialize Geiger
+  pinMode(geiger_input, INPUT);
+  digitalWrite(geiger_input,HIGH);
+  attachInterrupt(0,countPulse,FALLING);
 }
 
 void loop(void)
@@ -73,14 +75,26 @@ void loop(void)
 
   Serial.println(data_sensor);
 
-  // if the file is available, write to it:
-  File dataFile = SD.open("datalog.txt", FILE_WRITE);
-  if (dataFile) {
-    dataFile.println(data_sensor);
-    dataFile.close();
-  } else {
-    Serial.println("error SD Card");
-  }
-
   delay(100);
+
+  if (millis()-timePreviousMeassure > 10000){
+    countPerMinute = 6*count;
+    timePreviousMeassure = millis();
+    char buffer[20];
+    //Serial.print("#S|LOGTEST|[");
+    String count_data = String("G, ") + String(countPerMinute);
+    Serial.println(count_data);
+    //Serial.println(itoa((countPerMinute), buffer, 10));
+    //Serial.println("]#");
+    count = 0;
+  }
+}
+
+
+void countPulse(){
+  detachInterrupt(0);
+  count++;
+  while(digitalRead(2)==0){
+  }
+  attachInterrupt(0,countPulse,FALLING);
 }

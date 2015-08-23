@@ -32,9 +32,9 @@ void loop(){
     //Será borrada cuando se compile en el sensor
     //Begin -> GobetWino
     char buffer[20];
-    Serial.print("#S|LOGTEST|[");
-    Serial.print(itoa((countPerMinute), buffer, 10));
-    Serial.println("]#");
+    //Serial.print("#S|LOGTEST|[");
+    Serial.println(itoa((countPerMinute), buffer, 10));
+    //Serial.println("]#");
     //End -> GobetWino
    
     count = 0;
